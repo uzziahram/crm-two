@@ -11,10 +11,11 @@ export async function GET(request: Request) {
 
     const { searchParams } = new URL(request.url);
     const month = searchParams.get('month'); // Expects format 'YYYY-MM'
+    const query = searchParams.get('query');
 
     if (month) {
       // Detailed order-level data for a specific month
-      const query = `
+      let sql = `
         SELECT 
           o.order_id,
           o.created_at,
@@ -29,15 +30,22 @@ export async function GET(request: Request) {
         JOIN customers c ON o.customer_id = c.customer_id
         WHERE o.payment_status = 'PAID' 
           AND DATE_FORMAT(o.created_at, '%Y-%m') = ?
-        GROUP BY o.order_id
-        ORDER BY o.created_at DESC
       `;
-      const [rows] = await pool.query(query, [month]);
+      const params: any[] = [month];
+
+      if (query) {
+        sql += ` AND (o.order_id LIKE ? OR c.first_name LIKE ? OR c.last_name LIKE ?)`;
+        const searchPattern = `%${query}%`;
+        params.push(searchPattern, searchPattern, searchPattern);
+      }
+
+      sql += ` GROUP BY o.order_id ORDER BY o.created_at DESC`;
+      const [rows] = await pool.query(sql, params);
       return NextResponse.json(rows, { status: 200 });
     }
 
     // Default: Aggregate financial metrics by month
-    const query = `
+    let sql = `
       SELECT 
         DATE_FORMAT(o.created_at, '%Y-%m') as month,
         SUM(oi.quantity * oi.unit_price) as total_income,
@@ -47,11 +55,17 @@ export async function GET(request: Request) {
       JOIN order_items oi ON o.order_id = oi.order_id
       JOIN products p ON oi.product_id = p.product_id
       WHERE o.payment_status = 'PAID'
-      GROUP BY month
-      ORDER BY month DESC
     `;
+    const params: any[] = [];
 
-    const [rows] = await pool.query(query);
+    if (query) {
+      sql += ` AND (DATE_FORMAT(o.created_at, '%Y-%m') LIKE ?)`;
+      params.push(`%${query}%`);
+    }
+
+    sql += ` GROUP BY month ORDER BY month DESC`;
+
+    const [rows] = await pool.query(sql, params);
 
     return NextResponse.json(rows, { status: 200 });
   } catch (error) {

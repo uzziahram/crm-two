@@ -32,6 +32,13 @@ export default function CustomerDashboard() {
   const [modalQuantity, setModalQuantity] = useState(1);
   const [reviews, setReviews] = useState<Review[]>([]);
   const [reviewsLoading, setReviewsLoading] = useState(false);
+  
+  // Search and Filter State
+  const [searchQuery, setSearchQuery] = useState('');
+  const [sortBy, setSortBy] = useState('newest');
+  const [minPrice, setMinPrice] = useState('');
+  const [maxPrice, setMaxPrice] = useState('');
+  
   const router = useRouter();
 
   useEffect(() => {
@@ -44,7 +51,7 @@ export default function CustomerDashboard() {
     }
 
     fetchProducts();
-  }, [router]);
+  }, [router, searchQuery, sortBy, minPrice, maxPrice]); // Refetch on filter change
 
   useEffect(() => {
     if (selectedProduct) {
@@ -54,8 +61,15 @@ export default function CustomerDashboard() {
   }, [selectedProduct]);
 
   const fetchProducts = async () => {
+    setLoading(true);
     try {
-      const res = await fetch('/api/v1/products');
+      const params = new URLSearchParams();
+      if (searchQuery) params.append('query', searchQuery);
+      if (sortBy) params.append('sort', sortBy);
+      if (minPrice) params.append('minPrice', minPrice);
+      if (maxPrice) params.append('maxPrice', maxPrice);
+
+      const res = await fetch(`/api/v1/products?${params.toString()}`);
       if (res.ok) {
         const data = await res.json();
         setProducts(data);
@@ -83,7 +97,7 @@ export default function CustomerDashboard() {
   };
 
   const handleAddToCart = async (e: React.MouseEvent, productId: number, quantity: number = 1) => {
-    e.stopPropagation(); // Prevent opening modal when clicking button
+    e.stopPropagation(); 
     setAddingId(productId);
     setMessage(null);
     const token = localStorage.getItem('token');
@@ -296,10 +310,76 @@ export default function CustomerDashboard() {
       </header>
 
       {/* Main Content */}
-      <main className="p-8 max-w-7xl mx-auto">
+      <main className="p-8 max-w-7xl mx-auto space-y-10">
+        {/* Search and Filters Bar */}
+        <section className="bg-white dark:bg-zinc-900/40 border border-zinc-100 dark:border-zinc-800/60 p-6 shadow-[2px_2px_0px_0px_rgba(0,0,0,0.02)] backdrop-blur-sm flex flex-wrap items-end gap-8">
+          <div className="flex-grow min-w-[300px] space-y-2">
+            <label className="block text-[10px] font-bold uppercase tracking-widest text-zinc-400">Search Hardware</label>
+            <div className="relative">
+              <input 
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="MODEL, SPECS, OR KEYWORDS..."
+                className="w-full bg-zinc-50/50 dark:bg-zinc-800/50 border border-zinc-100 dark:border-zinc-700 p-3 pl-10 text-sm font-light focus:border-zinc-300 dark:focus:border-zinc-500 outline-none transition-all placeholder:text-zinc-200 dark:placeholder:text-zinc-700"
+              />
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-300"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <label className="block text-[10px] font-bold uppercase tracking-widest text-zinc-400">Sort Intelligence</label>
+            <select 
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value)}
+              className="bg-zinc-50/50 dark:bg-zinc-800/50 border border-zinc-100 dark:border-zinc-700 p-3 text-xs font-bold uppercase tracking-tighter outline-none focus:border-zinc-300 dark:focus:border-zinc-500"
+            >
+              <option value="newest">Newest Arrivals</option>
+              <option value="price-asc">Price: Ascending</option>
+              <option value="price-desc">Price: Descending</option>
+            </select>
+          </div>
+
+          <div className="flex gap-4 items-end">
+            <div className="space-y-2 text-center">
+              <label className="block text-[10px] font-bold uppercase tracking-widest text-zinc-400">Min MSRP</label>
+              <input 
+                type="number" 
+                value={minPrice}
+                onChange={(e) => setMinPrice(e.target.value)}
+                placeholder="0"
+                className="w-24 bg-zinc-50/50 dark:bg-zinc-800/50 border border-zinc-100 dark:border-zinc-700 p-3 text-sm font-light outline-none"
+              />
+            </div>
+            <div className="space-y-2 text-center">
+              <label className="block text-[10px] font-bold uppercase tracking-widest text-zinc-400">Max MSRP</label>
+              <input 
+                type="number" 
+                value={maxPrice}
+                onChange={(e) => setMaxPrice(e.target.value)}
+                placeholder="MAX"
+                className="w-24 bg-zinc-50/50 dark:bg-zinc-800/50 border border-zinc-100 dark:border-zinc-700 p-3 text-sm font-light outline-none"
+              />
+            </div>
+          </div>
+
+          {(searchQuery || minPrice || maxPrice || sortBy !== 'newest') && (
+            <button 
+              onClick={() => { setSearchQuery(''); setMinPrice(''); setMaxPrice(''); setSortBy('newest'); }}
+              className="text-[9px] font-bold uppercase tracking-widest text-zinc-300 hover:text-red-400 transition-colors mb-3"
+            >
+              Clear Filters [X]
+            </button>
+          )}
+        </section>
+
         {loading ? (
           <div className="flex justify-center items-center py-20">
             <p className="text-[10px] font-bold tracking-[0.2em] uppercase text-zinc-300 animate-pulse">Initializing Inventory...</p>
+          </div>
+        ) : products.length === 0 ? (
+          <div className="text-center py-40 border border-dashed border-zinc-100 dark:border-zinc-800">
+            <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-300">No hardware matches current search criteria</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
