@@ -1,0 +1,38 @@
+services:
+  db:
+    image: mysql:8.0
+    container_name: techforge-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-rootpassword}
+      MYSQL_DATABASE: ${DB_NAME:-crm-two}
+      MYSQL_USER: db_admin
+      MYSQL_PASSWORD: ${DB_PASSWORD:-admin123}
+    ports:
+      - "3307:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: techforge-app
+    restart: always
+    environment:
+      DB_HOST: db
+      DB_USER: db_admin
+      DB_PASSWORD: ${DB_PASSWORD:-admin123}
+      DB_NAME: ${DB_NAME:-crm-two}
+      JWT_SECRET: ${JWT_SECRET:-your-very-secure-secret}
+      NEXT_PUBLIC_API_URL: http://localhost:3000
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    volumes:
+      - product_images:/app/public/product_images
+
+volumes:
+  db_data:
+  product_images:
