@@ -2,14 +2,17 @@ import { NextResponse } from 'next/server';
 import { getAuthUser } from '@/lib/auth';
 import pool from '@/lib/db';
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
     const user = await getAuthUser();
     if (!user || user.role !== 'admin') {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const reviewsQuery = `
+    const { searchParams } = new URL(request.url);
+    const query = searchParams.get('query');
+
+    let reviewsQuery = `
       SELECT 
         r.review_id,
         r.rating,
@@ -24,21 +27,35 @@ export async function GET() {
       FROM reviews r
       JOIN products p ON r.product_id = p.product_id
       JOIN customers c ON r.customer_id = c.customer_id
-      ORDER BY r.created_at DESC
+    `;
+    const params: any[] = [];
+
+    if (query) {
+      reviewsQuery += ` WHERE (p.name LIKE ? OR c.first_name LIKE ? OR c.last_name LIKE ? OR c.email LIKE ? OR r.comment LIKE ?)`;
+      const searchPattern = `%${query}%`;
+      params.push(searchPattern, searchPattern, searchPattern, searchPattern, searchPattern);
+    }
+
+    reviewsQuery += ` ORDER BY r.created_at DESC`;
+
+    let summaryQuery = `
+      SELECT 
+        r.rating,
+        COUNT(*) as count
+      FROM reviews r
+      JOIN products p ON r.product_id = p.product_id
+      JOIN customers c ON r.customer_id = c.customer_id
     `;
 
-    const summaryQuery = `
-      SELECT 
-        rating,
-        COUNT(*) as count
-      FROM reviews
-      GROUP BY rating
-      ORDER BY rating DESC
-    `;
+    if (query) {
+      summaryQuery += ` WHERE (p.name LIKE ? OR c.first_name LIKE ? OR c.last_name LIKE ? OR c.email LIKE ? OR r.comment LIKE ?)`;
+    }
+
+    summaryQuery += ` GROUP BY r.rating ORDER BY r.rating DESC`;
 
     const [[reviews], [summary]] = await Promise.all([
-      pool.query(reviewsQuery),
-      pool.query(summaryQuery)
+      pool.query(reviewsQuery, params),
+      pool.query(summaryQuery, params)
     ]);
 
     // Format summary into a cleaner object

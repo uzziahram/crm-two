@@ -489,13 +489,19 @@ export default function AdminDashboard() {
                   <div className="bg-white dark:bg-zinc-900/40 border border-zinc-100 dark:border-zinc-800/60 shadow-sm overflow-x-auto backdrop-blur-sm">
                     <table className="w-full text-left">
                       <thead>
-                        <tr className="border-b border-zinc-100 dark:border-zinc-800"><th className="p-6 text-[10px] font-bold uppercase text-zinc-300">Billing Period</th><th className="p-6 text-[10px] font-bold uppercase text-zinc-300 text-right">Revenue</th><th className="p-6 text-[10px] font-bold uppercase text-zinc-300 text-right">Net Profit</th></tr>
+                        <tr className="border-b border-zinc-100 dark:border-zinc-800">
+                          <th className="p-6 text-[10px] font-bold uppercase text-zinc-300">Billing Period</th>
+                          <th className="p-6 text-[10px] font-bold uppercase text-zinc-300 text-right">Revenue</th>
+                          <th className="p-6 text-[10px] font-bold uppercase text-zinc-300 text-right">Investment</th>
+                          <th className="p-6 text-[10px] font-bold uppercase text-zinc-300 text-right">Net Profit</th>
+                        </tr>
                       </thead>
                       <tbody>
                         {profits.map((record, index) => (
                           <tr key={index} className="border-b border-zinc-50 dark:border-zinc-800/30 cursor-pointer hover:bg-zinc-50/50 dark:hover:bg-zinc-900/50" onClick={() => fetchMonthlyDetails(record.month)}>
                             <td className="p-6 text-[11px] font-bold text-zinc-400 uppercase">{record.month}</td>
                             <td className="p-6 text-sm font-light text-zinc-700 dark:text-zinc-200 text-right">${parseFloat(record.total_income).toLocaleString()}</td>
+                            <td className="p-6 text-sm font-light text-zinc-500 dark:text-zinc-400 text-right">${parseFloat(record.total_investment).toLocaleString()}</td>
                             <td className="p-6 text-sm font-bold text-zinc-800 dark:text-zinc-100 text-right">${parseFloat(record.net_profit).toLocaleString()}</td>
                           </tr>
                         ))}
@@ -504,15 +510,30 @@ export default function AdminDashboard() {
                   </div>
                 ) : (
                   <div className="space-y-8 animate-in slide-in-from-right-4 duration-500">
-                    <div className="flex items-center gap-6"><button onClick={() => setSelectedMonth(null)} className="p-3 border border-zinc-200 dark:border-zinc-800 text-zinc-400 hover:text-zinc-800 transition-colors"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg></button><h2 className="text-xl font-light text-zinc-700 dark:text-zinc-200 uppercase tracking-tight">{selectedMonth} Analysis</h2></div>
+                    <div className="flex items-center gap-6">
+                      <button onClick={() => setSelectedMonth(null)} className="p-3 border border-zinc-200 dark:border-zinc-800 text-zinc-400 hover:text-zinc-800 transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                      </button>
+                      <h2 className="text-xl font-light text-zinc-700 dark:text-zinc-200 uppercase tracking-tight">{selectedMonth} Analysis</h2>
+                    </div>
                     <div className="bg-white dark:bg-zinc-900/40 border border-zinc-100 dark:border-zinc-800/60 shadow-sm overflow-x-auto">
                       <table className="w-full text-left">
                         <thead>
-                          <tr className="border-b border-zinc-100 dark:border-zinc-800"><th className="p-6 text-[10px] font-bold uppercase text-zinc-300">Transaction ID</th><th className="p-6 text-[10px] font-bold uppercase text-zinc-300">Purchaser</th><th className="p-6 text-[10px] font-bold uppercase text-zinc-300 text-right">Net Profit</th></tr>
+                          <tr className="border-b border-zinc-100 dark:border-zinc-800">
+                            <th className="p-6 text-[10px] font-bold uppercase text-zinc-300">Transaction ID</th>
+                            <th className="p-6 text-[10px] font-bold uppercase text-zinc-300">Purchaser</th>
+                            <th className="p-6 text-[10px] font-bold uppercase text-zinc-300 text-right">Investment</th>
+                            <th className="p-6 text-[10px] font-bold uppercase text-zinc-300 text-right">Net Profit</th>
+                          </tr>
                         </thead>
                         <tbody>
                           {monthlyDetails.map((order) => (
-                            <tr key={order.order_id} className="border-b border-zinc-50 dark:border-zinc-800/30"><td className="p-6 text-[11px] font-bold text-zinc-400 uppercase">#ORD-{order.order_id}</td><td className="p-6 text-sm font-light text-zinc-700 dark:text-zinc-200 uppercase">{order.first_name} {order.last_name}</td><td className="p-6 text-sm font-bold text-zinc-800 dark:text-zinc-100 text-right">${parseFloat(order.net_profit).toLocaleString()}</td></tr>
+                            <tr key={order.order_id} className="border-b border-zinc-50 dark:border-zinc-800/30">
+                              <td className="p-6 text-[11px] font-bold text-zinc-400 uppercase">#ORD-{order.order_id}</td>
+                              <td className="p-6 text-sm font-light text-zinc-700 dark:text-zinc-200 uppercase">{order.first_name} {order.last_name}</td>
+                              <td className="p-6 text-sm font-light text-zinc-500 dark:text-zinc-400 text-right">${parseFloat(order.total_investment).toLocaleString()}</td>
+                              <td className="p-6 text-sm font-bold text-zinc-800 dark:text-zinc-100 text-right">${parseFloat(order.net_profit).toLocaleString()}</td>
+                            </tr>
                           ))}
                         </tbody>
                       </table>

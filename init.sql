@@ -95,3 +95,97 @@ INSERT IGNORE INTO products (product_id, name, description, specifications, pric
 (16, 'Bose Companion 2 Series III', 'High-quality audio performance for your computer.', 'Connectivity: Dual AUX inputs, Controls: Volume/Headphone jack on front, Sound: TrueSpace digital processing circuitry', 149.00, 15, '/product_images/16/Bose-companion-2-series-iii.jpg', 104.30, 1),
 (17, 'TP-Link Archer AX55', 'Dual-Band Gigabit Wi-Fi 6 Router for modern homes.', 'Speed: 2402 Mbps (5 GHz) + 574 Mbps (2.4 GHz), Ports: 1x Gigabit WAN, 4x Gigabit LAN, 1x USB 3.0, Security: WPA3, HomeShield', 119.99, 20, '/product_images/17/TP-Link-archer-ax55.jpg', 83.99, 1),
 (18, 'LOQ Laptop', 'Powerfull laptop', 'CPU: 15gen, RAM: 32 DDRG, STORAGE: 1TB Nvme', 1600.00, 100, '/product_images/18/Loq-image.jpg', 1400.00, 1);
+
+-- Seed sample customers
+INSERT IGNORE INTO `customers` (customer_id, first_name, last_name, email, password) VALUES
+(1, 'John', 'Doe', 'john@example.com', '$2b$10$xESk5gkNSI7irUowDzchN.j1Lk6WzJCmZT4lSAfXLybOPfAW.HsH.'),
+(2, 'Jane', 'Smith', 'jane@example.com', '$2b$10$xESk5gkNSI7irUowDzchN.j1Lk6WzJCmZT4lSAfXLybOPfAW.HsH.'),
+(3, 'Bob', 'Wilson', 'bob@example.com', '$2b$10$xESk5gkNSI7irUowDzchN.j1Lk6WzJCmZT4lSAfXLybOPfAW.HsH.'),
+(4, 'Alice', 'Johnson', 'alice@example.com', '$2b$10$xESk5gkNSI7irUowDzchN.j1Lk6WzJCmZT4lSAfXLybOPfAW.HsH.'),
+(5, 'Charlie', 'Brown', 'charlie@example.com', '$2b$10$xESk5gkNSI7irUowDzchN.j1Lk6WzJCmZT4lSAfXLybOPfAW.HsH.'),
+(6, 'David', 'Miller', 'david@example.com', '$2b$10$xESk5gkNSI7irUowDzchN.j1Lk6WzJCmZT4lSAfXLybOPfAW.HsH.'),
+(7, 'Eva', 'Davis', 'eva@example.com', '$2b$10$xESk5gkNSI7irUowDzchN.j1Lk6WzJCmZT4lSAfXLybOPfAW.HsH.'),
+(8, 'Frank', 'Wilson', 'frank@example.com', '$2b$10$xESk5gkNSI7irUowDzchN.j1Lk6WzJCmZT4lSAfXLybOPfAW.HsH.'),
+(9, 'Grace', 'Lee', 'grace@example.com', '$2b$10$xESk5gkNSI7irUowDzchN.j1Lk6WzJCmZT4lSAfXLybOPfAW.HsH.'),
+(10, 'Henry', 'Taylor', 'henry@example.com', '$2b$10$xESk5gkNSI7irUowDzchN.j1Lk6WzJCmZT4lSAfXLybOPfAW.HsH.'),
+(11, 'Ivy', 'Anderson', 'ivy@example.com', '$2b$10$xESk5gkNSI7irUowDzchN.j1Lk6WzJCmZT4lSAfXLybOPfAW.HsH.'),
+(12, 'Jack', 'Thomas', 'jack@example.com', '$2b$10$xESk5gkNSI7irUowDzchN.j1Lk6WzJCmZT4lSAfXLybOPfAW.HsH.'),
+(13, 'Kelly', 'White', 'kelly@example.com', '$2b$10$xESk5gkNSI7irUowDzchN.j1Lk6WzJCmZT4lSAfXLybOPfAW.HsH.');
+
+-- Seed sample orders
+INSERT IGNORE INTO `orders` (order_id, customer_id, total_amount, order_status, shipping_address, payment_status, payment_method, created_at) VALUES
+(1, 1, 2098.99, 'DELIVERED', '123 Main St, New York, NY 10001', 'PAID', 'Credit Card', '2024-01-15 10:30:00'),
+(2, 2, 497.00, 'SHIPPED', '456 Oak Ave, Los Angeles, CA 90001', 'PAID', 'PayPal', '2024-02-20 14:45:00'),
+(3, 3, 159.00, 'PROCESSING', '789 Pine Rd, Chicago, IL 60601', 'PAID', 'Credit Card', '2024-03-10 09:15:00'),
+(4, 4, 1599.00, 'DELIVERED', '101 Maple Dr, Seattle, WA 98101', 'PAID', 'Credit Card', '2024-04-05 16:20:00'),
+(5, 5, 89.00, 'DELIVERED', '202 Birch Ln, Austin, TX 78701', 'PAID', 'PayPal', '2024-05-12 11:00:00'),
+(6, 6, 549.99, 'DELIVERED', '303 Cedar St, Miami, FL 33101', 'PAID', 'Credit Card', '2024-06-18 13:30:00'),
+(7, 7, 398.00, 'DELIVERED', '404 Walnut Ave, Boston, MA 02101', 'PAID', 'Credit Card', '2024-07-22 15:45:00'),
+(8, 8, 99.00, 'DELIVERED', '505 Spruce Rd, Denver, CO 80201', 'PAID', 'PayPal', '2024-08-30 10:00:00'),
+(9, 9, 1999.99, 'DELIVERED', '606 Ash Blvd, San Francisco, CA 94101', 'PAID', 'Credit Card', '2024-09-14 17:10:00'),
+(10, 10, 599.00, 'DELIVERED', '707 Willow Way, Portland, OR 97201', 'PAID', 'Credit Card', '2024-10-02 12:20:00'),
+(11, 11, 79.99, 'DELIVERED', '808 Elm Ct, Atlanta, GA 30301', 'PAID', 'PayPal', '2024-11-11 14:00:00'),
+(12, 12, 159.00, 'DELIVERED', '909 Poplar Ter, Phoenix, AZ 85001', 'PAID', 'Credit Card', '2024-12-25 09:30:00'),
+(13, 13, 149.00, 'DELIVERED', '111 Sycamore St, Las Vegas, NV 89101', 'PAID', 'Credit Card', '2025-01-05 11:15:00'),
+(14, 1, 119.99, 'DELIVERED', '123 Main St, New York, NY 10001', 'PAID', 'PayPal', '2025-02-14 16:00:00'),
+(15, 2, 1600.00, 'DELIVERED', '456 Oak Ave, Los Angeles, CA 90001', 'PAID', 'Credit Card', '2025-03-20 10:45:00'),
+(16, 3, 1999.99, 'DELIVERED', '789 Pine Rd, Chicago, IL 60601', 'PAID', 'Credit Card', '2025-04-10 14:30:00'),
+(17, 4, 398.00, 'SHIPPED', '101 Maple Dr, Seattle, WA 98101', 'PAID', 'PayPal', '2025-05-01 09:00:00'),
+(18, 5, 549.99, 'PROCESSING', '202 Birch Ln, Austin, TX 78701', 'PAID', 'Credit Card', '2025-05-05 13:20:00'),
+(19, 6, 89.00, 'PENDING', '303 Cedar St, Miami, FL 33101', 'PAID', 'PayPal', '2025-05-08 11:45:00'),
+(20, 7, 99.00, 'PENDING', '404 Walnut Ave, Boston, MA 02101', 'PAID', 'Credit Card', '2025-05-10 15:00:00'),
+(21, 8, 1599.00, 'DELIVERED', '505 Spruce Rd, Denver, CO 80201', 'PAID', 'Credit Card', '2025-05-01 10:00:00'),
+(22, 9, 599.00, 'SHIPPED', '606 Ash Blvd, San Francisco, CA 94101', 'PAID', 'PayPal', '2025-05-05 14:30:00'),
+(23, 10, 1600.00, 'PROCESSING', '707 Willow Way, Portland, OR 97201', 'PAID', 'Credit Card', '2025-05-09 11:00:00');
+
+-- Seed sample order items
+INSERT IGNORE INTO `order_items` (order_id, product_id, quantity, unit_price) VALUES
+(1, 7, 1, 1999.99),
+(1, 8, 1, 99.00),
+(2, 9, 1, 398.00),
+(2, 8, 1, 99.00),
+(3, 15, 1, 159.00),
+(4, 12, 1, 1599.00),
+(5, 11, 1, 89.00),
+(6, 10, 1, 549.99),
+(7, 9, 1, 398.00),
+(8, 8, 1, 99.00),
+(9, 7, 1, 1999.99),
+(10, 13, 1, 599.00),
+(11, 14, 1, 79.99),
+(12, 15, 1, 159.00),
+(13, 16, 1, 149.00),
+(14, 17, 1, 119.99),
+(15, 18, 1, 1600.00),
+(16, 7, 1, 1999.99),
+(17, 9, 1, 398.00),
+(18, 10, 1, 549.99),
+(19, 11, 1, 89.00),
+(20, 8, 1, 99.00),
+(21, 12, 1, 1599.00),
+(22, 13, 1, 599.00),
+(23, 18, 1, 1600.00);
+
+-- Seed sample reviews
+INSERT IGNORE INTO `reviews` (product_id, customer_id, order_id, rating, comment, created_at) VALUES
+(7, 1, 1, 5, 'Absolutely love the M3 chip. Best MacBook yet!', '2024-01-20 10:30:00'),
+(8, 1, 1, 4, 'Great mouse, very ergonomic, but software is a bit bloated.', '2024-01-21 14:45:00'),
+(9, 2, 2, 5, 'The noise cancellation is magical. Perfect for travel.', '2024-02-25 09:15:00'),
+(8, 2, 2, 5, 'Quiet clicks are a game changer for office work.', '2024-02-26 16:20:00'),
+(12, 4, 4, 5, 'A beast of a laptop in a small form factor.', '2024-04-10 11:00:00'),
+(11, 5, 5, 4, 'Tactile and satisfying typing experience.', '2024-05-15 13:30:00'),
+(10, 6, 6, 5, 'Colors are stunning. Perfect for design work.', '2024-06-25 15:45:00'),
+(9, 7, 7, 5, 'Best headphones I have ever owned.', '2024-07-30 10:00:00'),
+(8, 8, 8, 4, 'Solid mouse, though took some time to get used to.', '2024-09-05 17:10:00'),
+(7, 9, 9, 5, 'Incredible performance and screen.', '2024-09-20 12:20:00'),
+(13, 10, 10, 5, 'The M2 chip makes everything so smooth.', '2024-10-10 14:00:00'),
+(14, 11, 11, 4, 'Great quality for the price.', '2024-11-20 09:30:00'),
+(15, 12, 12, 5, 'Fast and reliable storage.', '2024-12-30 11:15:00'),
+(16, 13, 13, 4, 'Good sound quality for desktop speakers.', '2025-01-12 16:00:00'),
+(17, 1, 14, 5, 'Signal is strong and setup was easy.', '2025-02-20 10:45:00'),
+(18, 2, 15, 4, 'Powerful laptop, great value.', '2025-03-25 14:30:00'),
+(7, 3, 16, 5, 'Expensive but worth every penny.', '2025-04-15 09:00:00'),
+(12, 8, 21, 5, 'The screen is beautiful and it runs everything fast.', '2025-05-05 10:00:00'),
+(13, 9, 22, 4, 'Perfect for my university notes.', '2025-05-07 14:30:00'),
+(18, 10, 23, 5, 'Exceeded my expectations for a gaming laptop.', '2025-05-10 11:00:00');
+
